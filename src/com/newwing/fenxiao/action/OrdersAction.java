@@ -56,8 +56,7 @@ public class OrdersAction extends BaseAction {
 	private String appid = "wx80c6f861374d68fc";
 	private String appsecret = "0d75a21684944d43120ce82102046244";
 	private String partner = "1401404002";
-//	private String partnerkey = "hsbd74mfimjeFKr74dd8Nhd83bsmdi7e";
-	private String partnerkey = "WES20170324WES2016060736WUzMhj7i";
+	private String partnerkey = "QHTqht201688HYDTxrxy1688NJZYCHIZ";
 	private String notify_url ="http://www.genobien.com/api/callback";// 回调地址
 	private String createOrderURL = "https://api.mch.weixin.qq.com/pay/unifiedorder";// 统一支付接口url
 	

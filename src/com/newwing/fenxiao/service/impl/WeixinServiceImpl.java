@@ -3,6 +3,7 @@ package com.newwing.fenxiao.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -46,12 +47,14 @@ public class WeixinServiceImpl implements IWeixinService {
 	public Map<String, String> transfer(String openid, Double amount, String partner_trade_no) throws Exception {
 		Map<String, String> map = new HashMap<String, String>(); // 定义一个返回MAP
 		try {
+			BigDecimal amt = new BigDecimal(amount);
+			BigDecimal amt2 = amt.movePointRight(2);
 			String url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
 			InetAddress ia = InetAddress.getLocalHost();
 			String ip = ia.getHostAddress(); // 获取本机IP地址
 			String uuid = UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");// 随机获取UUID
 			String appid = "wxcb1e625e652a1e19";// 微信分配的公众账号ID（企业号corpid即为此appId）
-			String mchid = "87f0c0b2d8523bd15ea2efed2abfcbbf";// 微信支付分配的商户号
+			String mchid = "1451639902";// 微信支付分配的商户号
 			String desc = "9号购物商城";
 			// 设置支付参数
 			SortedMap<Object, Object> signParams = new TreeMap<Object, Object>();
@@ -61,10 +64,10 @@ public class WeixinServiceImpl implements IWeixinService {
 			signParams.put("nonce_str", uuid); // 随机字符串，不长于32位
 			signParams.put("partner_trade_no", partner_trade_no); // 商户订单号，需保持唯一性
 			signParams.put("openid", openid); // 商户appid下，某用户的openid
-			signParams.put("check_name", "FORCE_CHECK"); // NO_CHECK：不校验真实姓名 
+			signParams.put("check_name", "NO_CHECK"); // NO_CHECK：不校验真实姓名 
 														// FORCE_CHECK：强校验真实姓名（未实名认证的用户会校验失败，无法转账）
 														// OPTION_CHECK：针对已实名认证的用户才校验真实姓名（未实名认证用户不校验，可以转账成功）
-			signParams.put("amount", amount); // 企业付款金额，单位为分
+			signParams.put("amount", amt2.toString()); // 企业付款金额，单位为分
 			signParams.put("desc", desc); // 企业付款操作说明信息。必填。
 			signParams.put("spbill_create_ip", ip); // 调用接口的机器Ip地址
 
@@ -79,7 +82,7 @@ public class WeixinServiceImpl implements IWeixinService {
 			data += uuid + "</nonce_str><partner_trade_no>"; // 随机字符串
 			data += partner_trade_no + "</partner_trade_no><openid>"; // 订单号
 			data += openid + "</openid><check_name>NO_CHECK</check_name><amount>"; // 是否强制实名验证
-			data += amount + "</amount><desc>"; // 企业付款金额，单位为分
+			data += amt2.toString() + "</amount><desc>"; // 企业付款金额，单位为分
 			data += desc + "</desc><spbill_create_ip>"; // 企业付款操作说明信息。必填。
 			data += ip + "</spbill_create_ip><sign>";// 调用接口的机器Ip地址
 			data += sign + "</sign></xml>";// 签名
@@ -161,7 +164,7 @@ public class WeixinServiceImpl implements IWeixinService {
 				sb.append(k + "=" + v + "&");
 			}
 		}
-		sb.append("key=" + "WES20170324WES2016060736WUzMhj7i");
+		sb.append("key=" + "QHTqht201688HYDTxrxy1688NJZYCHIZ");
 		String sign = MD5Encode(sb.toString(), characterEncoding).toUpperCase();
 		return sign;
 	}

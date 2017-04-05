@@ -84,6 +84,8 @@ public class WithdrawAction extends BaseAction {
 		this.cfg.setServletContextForTemplateLoading(this.request.getServletContext(), "WEB-INF/templates/admin");
 		Map root = new HashMap();
 		root.put("balanceAmt", user.getBalance());
+		root.put("nickname", user.getNickname());
+		root.put("headimgurl", user.getHeadimgurl());
 		FreemarkerUtils.freemarker(this.request, this.response, this.ftlFileName, this.cfg, root);
 	}
 
@@ -143,13 +145,14 @@ public class WithdrawAction extends BaseAction {
 						if (!"SUCCESS".equals(resultMap.get("state"))) {// 支付如果失败，则修改状态
 							json.put("status", "0");
 							json.put("message", "提现失败，请联系管理员");
+						} else {
+							json.put("status", "1");
+							json.put("message", "提现申请提交成功");
 						}
 					} catch (Exception e) {
 						json.put("status", "0");
 						json.put("message", "提现失败，请联系管理员");
 					}
-					json.put("status", "1");
-					json.put("message", "提现申请提交成功");
 				} else {
 					json.put("status", "0");
 					json.put("message", "提现申请提交失败，请重试");

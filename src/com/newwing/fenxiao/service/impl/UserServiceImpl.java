@@ -69,12 +69,11 @@ public class UserServiceImpl<T extends User> extends BaseServiceImpl<T> implemen
 	
 	public void register(User user, String type, String phone, String password, 
 			String password2, String source) throws Exception {
-		// TODO 
-//		if ("1".equals(type)) {
-//			this.apiService.agencyRegister(phone, password, source);
-//		} else {
-//			this.apiService.userRegister(phone, password, password2, source);
-//		}
+		if ("1".equals(type)) {
+			this.apiService.agencyRegister(phone, password, source);
+		} else {
+			this.apiService.userRegister(phone, password, password2, source);
+		}
 		this.userDao.saveOrUpdate(user);
 	}
 	

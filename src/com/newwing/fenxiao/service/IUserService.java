@@ -4,6 +4,8 @@ import com.newwing.fenxiao.service.IBaseService;
 import com.newwing.fenxiao.entities.User;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 public abstract interface IUserService<T extends User> extends IBaseService<T> {
 	
 	public abstract User getUserByName(String paramString);
@@ -29,7 +31,7 @@ public abstract interface IUserService<T extends User> extends IBaseService<T> {
 	public abstract List<User> findProfitUserList();
 	
 	public void register(User user, String type, String phone, String password,
-			String password2, String source) throws Exception;
+			String password2, String source, HttpServletRequest request) throws Exception;
 	
 	public void getSuperUser(int counter, String type, User user) throws Exception;
 	

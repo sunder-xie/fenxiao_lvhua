@@ -26,9 +26,7 @@
                 <th orderField="idno">佣金</th>
                  -->
                 <th orderField="idno">注册时间</th>
-                <!--
                 <th width="90">操作</th>
-                 -->
 			</tr>
 		</thead>
 		<tbody>
@@ -43,6 +41,9 @@
                 <td>${user.commission!""}</td>
                  -->
                 <td>${user.createDate}</td>
+                <td>
+                    <a href="subSubShopList.action?userNo=${user.no?string('#')}" class="btn btn-green" data-toggle="dialog" data-width="800" data-height="400" data-id="subSubShopList" data-mask="true">下级</a>
+                </td>
                 <!--
                 <td>
                     <a href="userEdit.action?id=${user.id?string('#')}" class="btn btn-green" data-toggle="dialog" data-width="800" data-height="400" data-id="userEdit" data-mask="true">编辑</a>

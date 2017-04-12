@@ -208,6 +208,7 @@ $(function(){
                                 <li data-id="15" data-pid="1" data-url="commissionList" data-tabid="commissionList">佣金明细</li>
 <!--                                 <li data-id="15" data-pid="1" data-url="withdrawList" data-tabid="withdrawList">提现管理</li> -->
 <!--                                 <li data-id="15" data-pid="1" data-url="rechargeList" data-tabid="rechargeList">充值管理</li> -->
+                            	<li data-id="15" data-pid="1" data-url="menuList" data-tabid="menuList">菜单管理</li>
                             </ul>
                         </div>
                     </div>

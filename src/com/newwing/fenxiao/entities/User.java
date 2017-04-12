@@ -27,6 +27,7 @@ public class User extends BaseBean implements Serializable {
 	private String address;// 会员地址（个人会员）
 	private String remark;// 备注
 	private String superNo;// 直接上级no
+	private String qrCodeUrl;// 二维码
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date statusDate;
@@ -225,6 +226,14 @@ public class User extends BaseBean implements Serializable {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getQrCodeUrl() {
+		return qrCodeUrl;
+	}
+
+	public void setQrCodeUrl(String qrCodeUrl) {
+		this.qrCodeUrl = qrCodeUrl;
 	}
 	
 }

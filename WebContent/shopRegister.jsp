@@ -5,6 +5,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 String openId = request.getParameter("openId");
 String headimgurl = request.getParameter("headimgurl");
 String nickname = request.getParameter("nickname");
+String userNo = request.getParameter("userNo");
+if (userNo == null || "".equals(userNo) || "null".equals(userNo)) {
+	userNo = "";
+}
 System.out.println(openId + "|" + headimgurl + "|" + nickname);
 %>
 <!DOCTYPE html>
@@ -128,7 +132,7 @@ System.out.println(openId + "|" + headimgurl + "|" + nickname);
 				<span>推荐人</span>
 			</div>
 			<div class="wbox-flex ml30 pr">
-				<input type="text" id="tuijianren" name="tuijianren" value="" placeholder="请输入推荐人编号" maxlength="11">	
+				<input type="text" id="tuijianren" name="tuijianren" value="<%=userNo%>" placeholder="请输入推荐人编号" maxlength="11">	
 			</div>
 			<em class="delete" style="display:none" name="Wap_reg_person_001"></em>
 		</div>

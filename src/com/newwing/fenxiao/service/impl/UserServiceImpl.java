@@ -3,6 +3,7 @@ package com.newwing.fenxiao.service.impl;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
@@ -12,6 +13,7 @@ import com.newwing.fenxiao.dao.IUserDao;
 import com.newwing.fenxiao.entities.User;
 import com.newwing.fenxiao.service.IApiService;
 import com.newwing.fenxiao.service.IUserService;
+import com.weixin.utils.QRCodeUtils;
 
 @Service("userService")
 @Scope("prototype")
@@ -68,13 +70,14 @@ public class UserServiceImpl<T extends User> extends BaseServiceImpl<T> implemen
 	}
 	
 	public void register(User user, String type, String phone, String password, 
-			String password2, String source) throws Exception {
-		if ("1".equals(type)) {
-			this.apiService.agencyRegister(phone, password, source);
-		} else {
-			this.apiService.userRegister(phone, password, password2, source);
-		}
+			String password2, String source, HttpServletRequest request) throws Exception {
+//		if ("1".equals(type)) {
+//			this.apiService.agencyRegister(phone, password, source);
+//		} else {
+//			this.apiService.userRegister(phone, password, password2, source);
+//		}
 		this.userDao.saveOrUpdate(user);
+		this.generateQrCode(user.getNo(), request);
 	}
 	
 	public void getSuperUser(int counter, String type, User user) throws Exception {
@@ -98,6 +101,27 @@ public class UserServiceImpl<T extends User> extends BaseServiceImpl<T> implemen
 			}
 		}
 		return ids.substring(1,ids.length() - 1);
+	}
+	
+	private String generateQrCode(String userNo, HttpServletRequest request) throws Exception {
+		User userTemp = this.getUserByNo(userNo);
+		String qrCodeUrl = userTemp.getQrCodeUrl();
+		if (qrCodeUrl == null || "".equals(qrCodeUrl)) {
+			String filePath = request.getSession().getServletContext().getRealPath("upload") + "\\";
+			String fileUrl = "http://" + request.getServerName() + ":" + request.getServerPort() 
+						+ "/upload/qrcode_logo.jpg";
+			if (!"0".equals(userTemp.getType())) {
+				String text = "http://" + request.getServerName() + ":" + request.getServerPort() 
+						+ "/api/auth?userNo=" + userNo;
+				fileUrl = "http://" + request.getServerName() + ":" + request.getServerPort() 
+						+ "/upload/" + userTemp.getNo() + ".png";
+				QRCodeUtils.generateQRCode(text, 180, 180, "png", filePath + userTemp.getId() + ".png");
+				userTemp.setQrCodeUrl(fileUrl);
+				this.userDao.saveOrUpdate(userTemp);
+			}
+			qrCodeUrl = fileUrl;
+		}
+		return qrCodeUrl;
 	}
 	
 }

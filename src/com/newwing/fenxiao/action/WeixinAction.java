@@ -67,7 +67,12 @@ public class WeixinAction extends BaseAction {
 	 * 授权页面
 	 */
 	public void auth() throws Exception {
-		backUri = URLEncoder.encode(backUri);
+		String userNo = request.getParameter("userNo");
+		String type = request.getParameter("type");
+		backUri = URLEncoder.encode(backUri + "?userNo=" + userNo);
+		if (type != null && "qr".equals(type)) {
+			backUri = "http://www.wesdzsw.com/api/myQrCode";
+		}
 		//scope 参数视各自需求而定，这里用scope=snsapi_base 不弹出授权页面直接授权目的只获取统一支付接口的openid
 		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
 				"appid=" + appid +
@@ -87,6 +92,7 @@ public class WeixinAction extends BaseAction {
 		String headimgurl = null;
 		String nickname = null;
 		String code = request.getParameter("code");
+		String userNo = request.getParameter("userNo");
 		String URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appid
 				+ "&secret=" + appsecret
 				+ "&code=" + code
@@ -106,7 +112,14 @@ public class WeixinAction extends BaseAction {
 			return;
 		}
  		
-		this.response.sendRedirect("../shopRegister.jsp?headimgurl=" + headimgurl + "&openId=" + openId + "&nickname=" + nickname);
+		String type = this.request.getParameter("type");
+		if (type != null && "qr".equals(type)) {
+			String qrCode = "";
+			this.response.sendRedirect("../myQrCode.jsp?qrCode=" + qrCode);
+		} else {
+			this.response.sendRedirect("../shopRegister.jsp?headimgurl=" + headimgurl 
+					+ "&openId=" + openId + "&nickname=" + nickname + "&userNo=" + userNo);
+		}
 	}
 	
 	/**

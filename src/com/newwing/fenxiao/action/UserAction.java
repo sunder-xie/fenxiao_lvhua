@@ -103,9 +103,9 @@ public class UserAction extends BaseAction {
 		try {
 			out = this.response.getWriter();
 			String code = this.request.getParameter("code");// 短信验证码
-			if(!this.validationCode(code, user.getPhone())) {// 校验短信验证码
-				throw new Exception("验证码错误或者已失效");
-			} 
+//			if(!this.validationCode(code, user.getPhone())) {// 校验短信验证码
+//				throw new Exception("验证码错误或者已失效");
+//			} 
 			String phone = user.getPhone();
 			String password = user.getPassword();
 			String password2 = user.getPassword2();
@@ -167,7 +167,7 @@ public class UserAction extends BaseAction {
 				User loginUser = this.userService.getUserByName(this.user.getName());
 				loginUser.setLoginCount(Integer.valueOf(loginUser.getLoginCount().intValue() + 1));
 				loginUser.setLastLoginTime(new Date());
-				this.userService.register(loginUser, user.getType(), phone, password, password2, source);
+				this.userService.register(loginUser, user.getType(), phone, password, password2, source, request);
 				HttpSession session = this.request.getSession();
 				session.setAttribute("loginUser", loginUser);
 			} else {
@@ -724,7 +724,7 @@ public class UserAction extends BaseAction {
 		String flag = (String)this.request.getSession().getAttribute("flag");
 		Admin loginAdmin = (Admin)this.request.getSession().getAttribute("loginAdmin");
 		String countHql = "select count(*) from User where deleted=0 and type != '0' ";
-		String hql = "from User where deleted=0 and type != '0' and superior like '%" + loginAdmin.getName() + "%'";
+		String hql = "from User where deleted=0 and type != '0' and superNo = '" + loginAdmin.getName() + "'";
 		if (StringUtils.isNotEmpty(key)) {
 			countHql = countHql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
 			hql = hql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
@@ -746,7 +746,37 @@ public class UserAction extends BaseAction {
 		root.put("flag", flag);
 		
 		FreemarkerUtils.freemarker(this.request, this.response, this.ftlFileName, this.cfg, root);
+	}
 	
+	// 再下级
+	public void subSubShopList() {
+		String key = this.request.getParameter("key");
+		String userNo = this.request.getParameter("userNo");
+		String flag = (String)this.request.getSession().getAttribute("flag");
+		Admin loginAdmin = (Admin)this.request.getSession().getAttribute("loginAdmin");
+		String countHql = "select count(*) from User where deleted=0 and type != '0' ";
+		String hql = "from User where deleted=0 and type != '0' and superNo = '" + userNo + "'";
+		if (StringUtils.isNotEmpty(key)) {
+			countHql = countHql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
+			hql = hql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
+		}
+		hql = hql + " order by id desc";
+
+		int count = 0;
+		count = this.userService.getTotalCount(countHql, new Object[0]);
+		this.page = new BjuiPage(this.pageCurrent, this.pageSize);
+		this.page.setTotalCount(count);
+		this.cfg = new Configuration();
+
+		this.cfg.setServletContextForTemplateLoading(this.request.getServletContext(), "WEB-INF/templates/admin");
+		List userList = this.userService.list(hql, this.page.getStart(), this.page.getPageSize(), new Object[0]);
+		Map root = new HashMap();
+		root.put("userList", userList);
+		root.put("page", this.page);
+		root.put("key", key);
+		root.put("flag", flag);
+		
+		FreemarkerUtils.freemarker(this.request, this.response, this.ftlFileName, this.cfg, root);
 	}
 	
 	public void toUpgrade() throws JSONException {

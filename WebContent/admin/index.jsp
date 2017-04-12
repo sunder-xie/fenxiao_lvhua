@@ -191,7 +191,7 @@ $(function(){
                         <div class="panel-body" >
                             <ul id="bjui-tree0" class="ztree ztree_main" data-toggle="ztree" data-on-click="MainMenuClick" data-expand-all="true">
 <!--                                 <li data-id="10" data-pid="1" data-url="configEdit" data-tabid="configEdit">系统设置</li> -->
-<!--                                 <li data-id="18" data-pid="1" data-url="adminList" data-tabid="adminList">管理员列表</li> -->
+                                <li data-id="18" data-pid="1" data-url="adminList" data-tabid="adminList">管理员列表</li>
 <!--                                 <li data-id="11" data-pid="1" data-url="articleCateList" data-tabid="articleCateList">文章栏目</li> -->
 <!--                                 <li data-id="12" data-pid="1" data-url="articleList" data-tabid="articleList">文章管理</li> -->
 <!--                                 <li data-id="12" data-pid="1" data-url="productCateList" data-tabid="productCateList">产品分类</li> -->
@@ -208,7 +208,7 @@ $(function(){
                                 <li data-id="15" data-pid="1" data-url="commissionList" data-tabid="commissionList">佣金明细</li>
 <!--                                 <li data-id="15" data-pid="1" data-url="withdrawList" data-tabid="withdrawList">提现管理</li> -->
 <!--                                 <li data-id="15" data-pid="1" data-url="rechargeList" data-tabid="rechargeList">充值管理</li> -->
-                            	<li data-id="15" data-pid="1" data-url="menuList" data-tabid="menuList">菜单管理</li>
+<!--                             	<li data-id="15" data-pid="1" data-url="menuList" data-tabid="menuList">菜单管理</li> -->
                             </ul>
                         </div>
                     </div>

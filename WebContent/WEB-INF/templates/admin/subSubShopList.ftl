@@ -1,15 +1,10 @@
-<form id="pagerForm" onsubmit="return navTabSearch(this);" action="userList.do" method="post">
-        <input type="hidden" name="pageCurrent" value="${page.pageCurrent}">
-        <input type="hidden" name="pageSize" value="${page.pageSize}">
-</form>
-
 <div class="bjui-pageHeader">
-    <form id="pagerForm" data-toggle="ajaxsearch" action="userList" method="post">
+    <form id="pagerForm" data-toggle="ajaxsearch" action="subShopList" method="post">
         <ul class="bjui-searchBar">
             <li><label>关键词：</label>
             <input type="text" id="key" name="key"  size="15" value="${key!''}"/>
             <button type="submit" class="btn-default" data-icon="search">查询</button>
-            <a class="btn btn-orange" href="javascript:;" data-toggle="reloadsearch" data-clear-query="true" data-icon="undo">清空查询</a>可以搜索会员编号、用户名、手机号</li>
+            <a class="btn btn-orange" href="javascript:;" data-toggle="reloadsearch" data-clear-query="true" data-icon="undo">清空查询</a>可以搜索商户手机号</li>
         </ul>
     </form>
 </div>
@@ -17,29 +12,33 @@
     <table data-toggle="tablefixed" data-width="100%" data-layout-h="0" data-nowrap="true">
         <thead>
 			<tr>
-				<th orderField="code">ID</th>
-				<th orderField="name">编号</th>
-                <th orderField="name">用户名</th>
-                <!--
-                <th orderField="name">手机号码</th>
-                <th orderField="grade">余额</th>
-                <th orderField="idno">佣金</th>
-                 -->
-                <th orderField="idno">注册时间</th>
+			<!--
+				<th orderField="code">商户全称</th>
+                <th orderField="name">状态</th>
+             -->   
+             	<th>商户帐号</th>
+                <th>微信账号</th>
+                <th>账户余额</th>
+                <th>商户类别</th>
+                <th>注册时间</th>
+                <#if subFlag = "1">
+                <th width="150">操作</th>
+                </#if>
 			</tr>
 		</thead>
 		<tbody>
         <#list userList as user>
             <tr>
-                <td>${user.id}</td>
                 <td>${user.no}</td>
-                <td>${user.name}</td>
-                <!--
-                <td>${user.phone!""}</td>
-                <td>${user.balance}</td>
+                <td>${user.nickname}</td>
                 <td>${user.commission!""}</td>
-                 -->
+                <td>${user.typeName}</td>
                 <td>${user.createDate}</td>
+                <td>
+                	<#if subFlag = "1">
+                	<a href="subSubShopList.action?id=${user.id?string('#')}&subCount=${subCount}" class="btn btn-green" data-toggle="dialog" data-width="800" data-height="400" data-id="subSubShopList" data-mask="true">下级商户</a>
+                	</#if>
+                </td>
             </tr>
 		</#list>
 		</tbody>

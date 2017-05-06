@@ -2,6 +2,7 @@ package com.newwing.fenxiao.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -96,8 +97,15 @@ public class WithdrawAction extends BaseAction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Double feeAmt = new Double(2);
+		Double feeAmt = new Double(3);
 		JSONObject json = new JSONObject();
+		Calendar c = Calendar.getInstance();
+		int dateNum = c.get(Calendar.DATE);
+		if (dateNum < 15 || dateNum > 20) {
+			json.put("status", "0");
+			json.put("message", "提现日期为每月15日到20日！");
+			return;
+		}
 		if (this.withdraw.getMoney().doubleValue() < 50.0D) {
 			json.put("status", "0");
 			json.put("message", "金额必须大于等于50");
@@ -105,7 +113,7 @@ public class WithdrawAction extends BaseAction {
 			HttpSession session = this.request.getSession();
 			User loginUser = (User) session.getAttribute("loginUser");
 			User findUser = (User) this.userService.findById(User.class, loginUser.getId().intValue());
-			if (this.withdraw.getMoney().doubleValue() + feeAmt > findUser.getBalance().doubleValue()) {
+			if (this.withdraw.getMoney().doubleValue() > findUser.getBalance().doubleValue()) {
 				json.put("status", "0");
 				json.put("message", "余额不足");
 			} else {
@@ -116,8 +124,8 @@ public class WithdrawAction extends BaseAction {
 				boolean result = this.withdrawService.saveOrUpdate(this.withdraw);
 				if (result) {
 					findUser.setCommission(Double
-							.valueOf(findUser.getCommission().doubleValue() - this.withdraw.getMoney().doubleValue()) - feeAmt);
-					findUser.setBalance(findUser.getBalance() - this.withdraw.getMoney() - feeAmt);
+							.valueOf(findUser.getCommission().doubleValue() - this.withdraw.getMoney().doubleValue()));
+					findUser.setBalance(findUser.getBalance() - this.withdraw.getMoney());
 					this.userService.saveOrUpdate(findUser);
 
 					Financial financial = new Financial();
@@ -141,7 +149,7 @@ public class WithdrawAction extends BaseAction {
 					Double amount = this.withdraw.getMoney();
 					String partner_trade_no = financial.getNo();
 					try {
-						Map<String, String> resultMap = this.weixinService.transfer(openid, amount, partner_trade_no);
+						Map<String, String> resultMap = this.weixinService.transfer(openid, amount - feeAmt, partner_trade_no);
 						if (!"SUCCESS".equals(resultMap.get("state"))) {// 支付如果失败，则修改状态
 							json.put("status", "0");
 							json.put("message", "提现失败，请联系管理员");

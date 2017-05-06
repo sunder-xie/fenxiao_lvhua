@@ -19,15 +19,17 @@ public class User extends BaseBean implements Serializable {
 	private String password;
 	private String password2;
 	private Double balance;
+	private Double unBalance;// 不可提现金额
 	private Double commission;
 	private String superior;
 	private Integer status;
-	private String type;// 会员类别 0-普通会员；1-普通商家会员 2-白金商户 3-铂金砂商户 4- 钻石商户
+	private String type;// 会员类别 0-普通会员；1-普通商家会员 2-VIP商户 3-白金商户 4-铂金商户
 	private String typeName;
 	private String address;// 会员地址（个人会员）
 	private String remark;// 备注
 	private String superNo;// 直接上级no
 	private String qrCodeUrl;// 二维码
+	private Double tradeAmtMonth;// 当月交易额
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date statusDate;
@@ -199,11 +201,11 @@ public class User extends BaseBean implements Serializable {
 		} else if ("1".equals(type)) {
 			typeName = "普通商户";
 		} else if ("2".equals(type)) {
-			typeName = "白金商户";
+			typeName = "VIP商户";
 		} else if ("3".equals(type)) {
-			typeName = "铂金商户";
+			typeName = "白金商户";
 		} else if ("4".equals(type)) {
-			typeName = "钻石商户";
+			typeName = "铂金商户";
 		}
 		return typeName;
 	}
@@ -234,6 +236,22 @@ public class User extends BaseBean implements Serializable {
 
 	public void setQrCodeUrl(String qrCodeUrl) {
 		this.qrCodeUrl = qrCodeUrl;
+	}
+
+	public Double getTradeAmtMonth() {
+		return tradeAmtMonth;
+	}
+
+	public void setTradeAmtMonth(Double tradeAmtMonth) {
+		this.tradeAmtMonth = tradeAmtMonth;
+	}
+
+	public Double getUnBalance() {
+		return unBalance;
+	}
+
+	public void setUnBalance(Double unBalance) {
+		this.unBalance = unBalance;
 	}
 	
 }

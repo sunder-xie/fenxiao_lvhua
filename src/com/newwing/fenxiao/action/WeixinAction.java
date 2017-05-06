@@ -69,10 +69,11 @@ public class WeixinAction extends BaseAction {
 	public void auth() throws Exception {
 		String userNo = request.getParameter("userNo");
 		String type = request.getParameter("type");
-		backUri = URLEncoder.encode(backUri + "?userNo=" + userNo);
+		backUri = backUri + "?userNo=" + userNo;
 		if (type != null && "qr".equals(type)) {
-			backUri = "http://www.wesdzsw.com/api/myQrCode";
+			backUri = backUri + "&type=qr";
 		}
+		backUri = URLEncoder.encode(backUri);
 		//scope 参数视各自需求而定，这里用scope=snsapi_base 不弹出授权页面直接授权目的只获取统一支付接口的openid
 		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
 				"appid=" + appid +
@@ -93,6 +94,7 @@ public class WeixinAction extends BaseAction {
 		String nickname = null;
 		String code = request.getParameter("code");
 		String userNo = request.getParameter("userNo");
+		String type = request.getParameter("type");
 		String URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appid
 				+ "&secret=" + appsecret
 				+ "&code=" + code
@@ -111,10 +113,8 @@ public class WeixinAction extends BaseAction {
 			this.response.sendRedirect("/api/auth");
 			return;
 		}
- 		
-		String type = this.request.getParameter("type");
 		if (type != null && "qr".equals(type)) {
-			String qrCode = "";
+			String qrCode = this.userService.generateQrCode(openId, request);
 			this.response.sendRedirect("../myQrCode.jsp?qrCode=" + qrCode);
 		} else {
 			this.response.sendRedirect("../shopRegister.jsp?headimgurl=" + headimgurl 
@@ -156,38 +156,38 @@ public class WeixinAction extends BaseAction {
 			System.out.println("SIGN : " + SIGN);
 			System.out.println("key : " + key);
 			
-			if (ORDER_NO == null || "".equals(ORDER_NO.trim())) {
-				throw new Exception("参数有误");
-			}
-			if (ORDER_PRICE == null || "".equals(ORDER_PRICE.trim())) {
-				throw new Exception("参数有误");
-			}
-			if (ORDER_CONFIRMTIME == null || "".equals(ORDER_CONFIRMTIME.trim())) {
-				throw new Exception("参数有误");
-			}
-			if (USER_ID == null || "".equals(USER_ID.trim())) {
-				throw new Exception("参数有误");
-			}
-			if (ORDER_STATUS == null || "".equals(ORDER_STATUS.trim())) {
-				throw new Exception("参数有误");
-			}
-			if (SHOP_ID == null || "".equals(SHOP_ID.trim())) {
-				throw new Exception("参数有误");
-			}
-			if (TIMESTAMP == null || "".equals(TIMESTAMP.trim())) {
-				throw new Exception("参数有误");
-			}
-			ORDER_NO = Base64.getFromBase64(ORDER_NO);
-			ORDER_PRICE = Base64.getFromBase64(ORDER_PRICE);
-			ORDER_CONFIRMTIME = Base64.getFromBase64(ORDER_CONFIRMTIME);
-			USER_ID = Base64.getFromBase64(USER_ID);
-			ORDER_STATUS = Base64.getFromBase64(ORDER_STATUS);
-			SHOP_ID = Base64.getFromBase64(SHOP_ID);
-			TIMESTAMP = Base64.getFromBase64(TIMESTAMP);
+//			if (ORDER_NO == null || "".equals(ORDER_NO.trim())) {
+//				throw new Exception("参数有误");
+//			}
+//			if (ORDER_PRICE == null || "".equals(ORDER_PRICE.trim())) {
+//				throw new Exception("参数有误");
+//			}
+//			if (ORDER_CONFIRMTIME == null || "".equals(ORDER_CONFIRMTIME.trim())) {
+//				throw new Exception("参数有误");
+//			}
+//			if (USER_ID == null || "".equals(USER_ID.trim())) {
+//				throw new Exception("参数有误");
+//			}
+//			if (ORDER_STATUS == null || "".equals(ORDER_STATUS.trim())) {
+//				throw new Exception("参数有误");
+//			}
+//			if (SHOP_ID == null || "".equals(SHOP_ID.trim())) {
+//				throw new Exception("参数有误");
+//			}
+//			if (TIMESTAMP == null || "".equals(TIMESTAMP.trim())) {
+//				throw new Exception("参数有误");
+//			}
+//			ORDER_NO = Base64.getFromBase64(ORDER_NO);
+//			ORDER_PRICE = Base64.getFromBase64(ORDER_PRICE);
+//			ORDER_CONFIRMTIME = Base64.getFromBase64(ORDER_CONFIRMTIME);
+//			USER_ID = Base64.getFromBase64(USER_ID);
+//			ORDER_STATUS = Base64.getFromBase64(ORDER_STATUS);
+//			SHOP_ID = Base64.getFromBase64(SHOP_ID);
+//			TIMESTAMP = Base64.getFromBase64(TIMESTAMP);
 			
-			if (ORDER_STATUS == null || !"B".equals(ORDER_STATUS)) {
-				throw new Exception("订单状态不对");
-			}
+//			if (ORDER_STATUS == null || !"B".equals(ORDER_STATUS)) {
+//				throw new Exception("订单状态不对");
+//			}
 			
 			System.out.println("ORDER_NO : " + ORDER_NO);
 			System.out.println("ORDER_PRICE : " + ORDER_PRICE);
@@ -204,9 +204,9 @@ public class WeixinAction extends BaseAction {
 			String newSign = Md5.getMD5Code(strObj);
 			
 			System.out.println("newSign >>>>>>>>>> " + newSign);
-			if (SIGN == null || "".equals(SIGN) || !newSign.equals(SIGN)) {
-				throw new Exception("签名错误");
-			}
+//			if (SIGN == null || "".equals(SIGN) || !newSign.equals(SIGN)) {
+//				throw new Exception("签名错误");
+//			}
 			
 			// 通过会员编号、订单金额进行分销佣金计算
 			User user = this.userService.getUserByPhone(USER_ID);// 订单所属会员
@@ -256,6 +256,8 @@ public class WeixinAction extends BaseAction {
 					throw new Exception("订单已经存在，请勿重新同步！");
 				}
 				this.ordersService.saveSynchroOrder(orders);// 还需要进行分润处理
+				shop.setTradeAmtMonth(shop.getTradeAmtMonth() + new Double(ORDER_PRICE));
+				this.userService.saveOrUpdate(shop);
 			}
 			code = "0000";
 			message = "";

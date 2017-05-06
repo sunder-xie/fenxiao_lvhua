@@ -77,7 +77,6 @@ public class UserServiceImpl<T extends User> extends BaseServiceImpl<T> implemen
 //			this.apiService.userRegister(phone, password, password2, source);
 //		}
 		this.userDao.saveOrUpdate(user);
-		this.generateQrCode(user.getNo(), request);
 	}
 	
 	public void getSuperUser(int counter, String type, User user) throws Exception {
@@ -103,19 +102,22 @@ public class UserServiceImpl<T extends User> extends BaseServiceImpl<T> implemen
 		return ids.substring(1,ids.length() - 1);
 	}
 	
-	private String generateQrCode(String userNo, HttpServletRequest request) throws Exception {
-		User userTemp = this.getUserByNo(userNo);
+	public String generateQrCode(String openId, HttpServletRequest request) throws Exception {
+		User userTemp = this.getUserByOpenId(openId);
+		String fileUrl = "http://" + request.getServerName() + ":" + request.getServerPort() 
+		+ "/upload/qrcode_logo.jpg";
+		if (userTemp == null) {
+			return fileUrl;
+		}
 		String qrCodeUrl = userTemp.getQrCodeUrl();
 		if (qrCodeUrl == null || "".equals(qrCodeUrl)) {
 			String filePath = request.getSession().getServletContext().getRealPath("upload") + "\\";
-			String fileUrl = "http://" + request.getServerName() + ":" + request.getServerPort() 
-						+ "/upload/qrcode_logo.jpg";
 			if (!"0".equals(userTemp.getType())) {
 				String text = "http://" + request.getServerName() + ":" + request.getServerPort() 
-						+ "/api/auth?userNo=" + userNo;
+						+ "/api/auth?userNo=" + userTemp.getNo();
 				fileUrl = "http://" + request.getServerName() + ":" + request.getServerPort() 
 						+ "/upload/" + userTemp.getNo() + ".png";
-				QRCodeUtils.generateQRCode(text, 180, 180, "png", filePath + userTemp.getId() + ".png");
+				QRCodeUtils.generateQRCode(text, 180, 180, "png", filePath + userTemp.getNo() + ".png");
 				userTemp.setQrCodeUrl(fileUrl);
 				this.userDao.saveOrUpdate(userTemp);
 			}

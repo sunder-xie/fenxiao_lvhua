@@ -70,6 +70,13 @@ public class OrderJob {
 			findConfig.setUnProfitAmt(new Double(0));
 			this.configService.saveOrUpdate(findConfig);
 		}
+		
+		// 任务二：对当月交易金额清零 TODO 暂时无性能问题，回头需考虑
+		List<User> newUserList = this.userService.list(null);
+		for (User user: newUserList) { 
+			user.setTradeAmtMonth(new Double(0));
+			this.userService.saveOrUpdate(user);
+		}
 	}
 
 }

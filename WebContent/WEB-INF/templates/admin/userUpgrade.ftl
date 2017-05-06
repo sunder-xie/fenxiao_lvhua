@@ -23,9 +23,9 @@
                         <td>
                             <label for="j_dialog_name" class="control-label x90">渠道商级别：</label>
                             <select name="user.type" class="control-label x90">
-                            	<option value="4">钻石商户</option>
-                            	<option value="3">铂金商户</option>
-                            	<option value="2">白金商户</option>
+                            	<option value="4">铂金商户</option>
+                            	<option value="3">白金商户</option>
+                            	<option value="2">VIP商户</option>
                             </select>
                         </td>
                     </tr>

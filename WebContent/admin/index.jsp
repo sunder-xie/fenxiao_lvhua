@@ -160,6 +160,7 @@ $(function(){
 					    ${loginAdmin.name}
 					</a></li>
 				<li><a href="withdrawAdd" data-toggle="dialog" data-id=withdrawAdd_page" data-mask="true" data-width="400" data-height="260">余额 ：${loginUser.balance} 元【<font color="red;">提现</font>】</a></li>
+				<li>不可提现余额 ：${loginUser.unBalance} 元</li>
                 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 	我的账户 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -191,21 +192,28 @@ $(function(){
                         <div class="panel-body" >
                             <ul id="bjui-tree0" class="ztree ztree_main" data-toggle="ztree" data-on-click="MainMenuClick" data-expand-all="true">
 <!--                                 <li data-id="10" data-pid="1" data-url="configEdit" data-tabid="configEdit">系统设置</li> -->
+                                <c:if test="${flag == '1'}">
                                 <li data-id="18" data-pid="1" data-url="adminList" data-tabid="adminList">管理员列表</li>
+                                </c:if>
 <!--                                 <li data-id="11" data-pid="1" data-url="articleCateList" data-tabid="articleCateList">文章栏目</li> -->
 <!--                                 <li data-id="12" data-pid="1" data-url="articleList" data-tabid="articleList">文章管理</li> -->
 <!--                                 <li data-id="12" data-pid="1" data-url="productCateList" data-tabid="productCateList">产品分类</li> -->
 <!--                                 <li data-id="12" data-pid="1" data-url="productList" data-tabid="productList">产品管理</li> -->
 <!--                                 <li data-id="15" data-pid="1" data-url="messageList" data-tabid="messageList">留言管理</li> -->
 <!-- 								<li data-id="15" data-pid="1" data-url="userAdd" data-tabid="userAdd">添加下级渠道</li> -->
-								<li data-id="15" data-pid="1" data-url="subShopList" data-tabid="subShopList">商户管理</li>
+								<c:if test="${flag == '1'}">
+								<li data-id="11" data-pid="1" data-url="shopList" data-tabid="shopList">同盟家谱</li>
+								</c:if>
+								<c:if test="${flag != '1'}">
+								<li data-id="12" data-pid="1" data-url="subShopList" data-tabid="subShopList">同盟家谱</li>
+								</c:if>
 <!--                                 <li data-id="15" data-pid="1" data-url="userList" data-tabid="userList">商户管理</li> -->
 								<c:if test="${flag == '1'}">
-                                <li data-id="15" data-pid="1" data-url="userList" data-tabid="userList">用户管理</li>
+                                <li data-id="13" data-pid="1" data-url="userList" data-tabid="userList">用户管理</li>
                                 </c:if>
 <!--                                 <li data-id="15" data-pid="1" data-url="financialList" data-tabid="financialList">财务明细</li> -->
                                 <li data-id="15" data-pid="1" data-url="ordersList" data-tabid="ordersList">订单管理</li>
-                                <li data-id="15" data-pid="1" data-url="commissionList" data-tabid="commissionList">佣金明细</li>
+                                <li data-id="15" data-pid="1" data-url="commissionList" data-tabid="commissionList">分润明细</li>
 <!--                                 <li data-id="15" data-pid="1" data-url="withdrawList" data-tabid="withdrawList">提现管理</li> -->
 <!--                                 <li data-id="15" data-pid="1" data-url="rechargeList" data-tabid="rechargeList">充值管理</li> -->
 <!--                             	<li data-id="15" data-pid="1" data-url="menuList" data-tabid="menuList">菜单管理</li> -->

@@ -9,7 +9,6 @@ String userNo = request.getParameter("userNo");
 if (userNo == null || "".equals(userNo) || "null".equals(userNo)) {
 	userNo = "";
 }
-System.out.println(openId + "|" + headimgurl + "|" + nickname);
 %>
 <!DOCTYPE html>
 <html>

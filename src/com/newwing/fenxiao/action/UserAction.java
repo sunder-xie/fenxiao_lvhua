@@ -146,6 +146,9 @@ public class UserAction extends BaseAction {
 			if (this.userService.getUserByName(this.user.getPhone()) != null) {
 				throw new Exception("手机号已存在");
 			}
+			if (this.userService.getUserByOpenId(this.user.getOpenId()) != null) {
+				throw new Exception("该微信号已经是会员");
+			}
 			String ip = null;
 			try {
 				ip = IpUtils.getIpAddress(this.request);
@@ -719,10 +722,51 @@ public class UserAction extends BaseAction {
 		this.ftlFileName = ftlFileName;
 	}
 	
-	public void subShopList() {
+	public void shopList() {
+		String shopType = this.request.getParameter("shopType");
 		String key = this.request.getParameter("key");
 		String flag = (String)this.request.getSession().getAttribute("flag");
 		Admin loginAdmin = (Admin)this.request.getSession().getAttribute("loginAdmin");
+		String countHql = "select count(*) from User where deleted=0 and type != '0' ";
+		
+		String hql = "from User where deleted=0 and type != '0' ";
+		if (StringUtils.isNotEmpty(key)) {
+			countHql = countHql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
+			hql = hql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
+		}
+		if (shopType != null && !"".equals(shopType)) {
+			countHql = countHql + " and shopType='" + shopType +  "'";
+			hql = hql + " and shopType='" + shopType +  "'";
+		}
+		hql = hql + " order by id desc";
+
+		int count = 0;
+		count = this.userService.getTotalCount(countHql, new Object[0]);
+		this.page = new BjuiPage(this.pageCurrent, this.pageSize);
+		this.page.setTotalCount(count);
+		this.cfg = new Configuration();
+
+		this.cfg.setServletContextForTemplateLoading(this.request.getServletContext(), "WEB-INF/templates/admin");
+		List userList = this.userService.list(hql, this.page.getStart(), this.page.getPageSize(), new Object[0]);
+		Map root = new HashMap();
+		root.put("userList", userList);
+		root.put("page", this.page);
+		root.put("key", key);
+		root.put("flag", flag);
+		root.put("shopType", shopType);
+		
+		FreemarkerUtils.freemarker(this.request, this.response, this.ftlFileName, this.cfg, root);
+	}
+	
+	public void subShopList() {
+		String key = this.request.getParameter("key");
+		String flag = (String)this.request.getSession().getAttribute("flag");
+		String subFlag = "0";
+		Admin loginAdmin = (Admin)this.request.getSession().getAttribute("loginAdmin");
+		User user = this.userService.getUserByNo(loginAdmin.getName());
+		if (user != null && ("3".equals(user.getType()) || "4".equals(user.getType()))) {
+			subFlag = "1";
+		}
 		String countHql = "select count(*) from User where deleted=0 and type != '0' ";
 		String hql = "from User where deleted=0 and type != '0' and superNo = '" + loginAdmin.getName() + "'";
 		if (StringUtils.isNotEmpty(key)) {
@@ -744,6 +788,7 @@ public class UserAction extends BaseAction {
 		root.put("page", this.page);
 		root.put("key", key);
 		root.put("flag", flag);
+		root.put("subFlag", subFlag);
 		
 		FreemarkerUtils.freemarker(this.request, this.response, this.ftlFileName, this.cfg, root);
 	}
@@ -751,11 +796,22 @@ public class UserAction extends BaseAction {
 	// 再下级
 	public void subSubShopList() {
 		String key = this.request.getParameter("key");
-		String userNo = this.request.getParameter("userNo");
+		String id = this.request.getParameter("id");
+		String subCount = this.request.getParameter("subCount");
+		String subFlag = "0";
+		Integer subCountInt = new Integer(1);
+		if (subCount != null && !"".equals(subCount)) {
+			subCountInt = subCountInt + new Integer(subCount);
+		}
+		if (subCountInt < 2) {
+			subFlag = "1";
+		}
+		
+		User userTemp = this.userService.findById(User.class, new Integer(id));
+		
 		String flag = (String)this.request.getSession().getAttribute("flag");
-		Admin loginAdmin = (Admin)this.request.getSession().getAttribute("loginAdmin");
-		String countHql = "select count(*) from User where deleted=0 and type != '0' ";
-		String hql = "from User where deleted=0 and type != '0' and superNo = '" + userNo + "'";
+		String countHql = "select count(*) from User where deleted=0 and type != '0' and superNo = '" + userTemp.getNo() + "'";
+		String hql = "from User where deleted=0 and type != '0' and superNo = '" + userTemp.getNo() + "'";
 		if (StringUtils.isNotEmpty(key)) {
 			countHql = countHql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
 			hql = hql + " and (name='" + key + "' or no='" + key + "' or phone='" + key + "')";
@@ -775,6 +831,8 @@ public class UserAction extends BaseAction {
 		root.put("page", this.page);
 		root.put("key", key);
 		root.put("flag", flag);
+		root.put("subFlag", subFlag);
+		root.put("subCount", subCountInt);
 		
 		FreemarkerUtils.freemarker(this.request, this.response, this.ftlFileName, this.cfg, root);
 	}

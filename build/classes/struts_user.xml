@@ -7,10 +7,13 @@
     	<action name="userList" class="userAction" method="list">
     		<param name="ftlFileName">userList.ftl</param>
     	</action>
+    	<action name="shopList" class="userAction" method="shopList">
+    		<param name="ftlFileName">shopList.ftl</param>
+    	</action>
     	<action name="subShopList" class="userAction" method="subShopList">
     		<param name="ftlFileName">subShopList.ftl</param>
     	</action>
-    	<action name="subSubShopList" class="userAction" method="subShopList">
+    	<action name="subSubShopList" class="userAction" method="subSubShopList">
     		<param name="ftlFileName">subSubShopList.ftl</param>
     	</action>
     	<action name="userAdd" class="userAction" method="add">

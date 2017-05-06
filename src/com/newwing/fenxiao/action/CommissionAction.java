@@ -48,6 +48,8 @@ public class CommissionAction extends BaseAction {
 	private String ftlFileName;
 
 	public void list() {
+		String subType = this.request.getParameter("subType");
+		
 		User loginUser = (User)this.request.getSession().getAttribute("loginUser");
 //		String ids = this.userService.getSuperUserids(loginUser);
 		String key = this.request.getParameter("key");

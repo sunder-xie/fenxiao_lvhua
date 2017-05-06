@@ -7,6 +7,13 @@
         <ul class="bjui-searchBar">
             <li><label>关键词：</label>
             <input type="text" id="key" name="key"  size="30" value="${key!''}"/>
+            <label>下级商户类型：</label>
+            <select name="subTpye">
+            	<option value="">请选择</option>
+            	<option value="1">一代商</option>
+            	<option value="2">二代商</option>
+            	<option value="3">三代商</option>
+            </select>
             <button type="submit" class="btn-default" data-icon="search">查询</button>
             <a class="btn btn-orange" href="javascript:;" data-toggle="reloadsearch" data-clear-query="true" data-icon="undo">清空查询</a>可以搜索会员名、订单号、产品名称</li>
         </ul>

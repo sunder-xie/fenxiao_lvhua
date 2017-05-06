@@ -37,4 +37,6 @@ public abstract interface IUserService<T extends User> extends IBaseService<T> {
 	
 	public String getSuperUserids(User user);
 	
+	public String generateQrCode(String userNo, HttpServletRequest request) throws Exception;
+	
 }

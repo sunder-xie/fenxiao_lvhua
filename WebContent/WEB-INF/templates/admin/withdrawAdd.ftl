@@ -9,6 +9,7 @@
             <div class="form-group" style="margin: 20px 0 20px; ">
                 <label for="j_pwschange_newpassword" class="control-label x85">提现金额：</label>
                 <input data-rule="提现金额:required" name="withdraw.money" id="money" value="" placeholder="提现金额" size="20">
+                <font style="color:red;">提现手续费3元/笔</font>
             </div>
             <div class="form-group" style="margin: 20px 0 20px; ">
                 <label for="j_pwschange_newpassword" class="control-label x85">提现人：</label>

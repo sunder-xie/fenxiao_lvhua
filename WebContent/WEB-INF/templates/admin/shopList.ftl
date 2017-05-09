@@ -33,7 +33,7 @@
             <tr>
                 <td>${user.no}</td>
                 <td>${user.nickname}</td>
-                <td>${user.commission!""}</td>
+                <td>${user.tradeAmtMonth}</td>
                 <td>${user.typeName}</td>
                 <td>${user.createDate}</td>
                 <td>

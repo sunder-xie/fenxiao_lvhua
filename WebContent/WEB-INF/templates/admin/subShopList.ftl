@@ -18,7 +18,7 @@
              -->   
              	<th>商户帐号</th>
                 <th>微信账号</th>
-                <th>账户余额</th>
+                <th>当月交易额</th>
                 <th>商户类别</th>
                 <th>注册时间</th>
               	<th width="150">操作</th>
@@ -29,7 +29,7 @@
             <tr>
                 <td>${user.no}</td>
                 <td>${user.nickname}</td>
-                <td>${user.commission!""}</td>
+                <td>${user.tradeAmtMonth}</td>
                 <td>${user.typeName}</td>
                 <td>${user.createDate}</td>
                 <td>

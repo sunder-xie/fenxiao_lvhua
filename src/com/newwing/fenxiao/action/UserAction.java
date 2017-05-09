@@ -22,12 +22,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.newwing.fenxiao.entities.Admin;
 import com.newwing.fenxiao.entities.Config;
 import com.newwing.fenxiao.entities.Financial;
+import com.newwing.fenxiao.entities.Orders;
 import com.newwing.fenxiao.entities.PhoneValidateCode;
 import com.newwing.fenxiao.entities.User;
 import com.newwing.fenxiao.service.IAdminService;
 import com.newwing.fenxiao.service.IApiService;
 import com.newwing.fenxiao.service.IConfigService;
 import com.newwing.fenxiao.service.IFinancialService;
+import com.newwing.fenxiao.service.IOrdersService;
 import com.newwing.fenxiao.service.IPhoneValidateCodeService;
 import com.newwing.fenxiao.service.IUserService;
 import com.newwing.fenxiao.utils.BjuiJson;
@@ -45,6 +47,9 @@ public class UserAction extends BaseAction {
 
 	@Resource(name = "userService")
 	private IUserService<User> userService;
+	
+	@Resource(name = "ordersService")
+	private IOrdersService<Orders> ordersService;
 	
 	@Resource(name = "adminService")
 	private IAdminService<Admin> adminService;
@@ -81,7 +86,16 @@ public class UserAction extends BaseAction {
 		this.cfg = new Configuration();
 
 		this.cfg.setServletContextForTemplateLoading(this.request.getServletContext(), "WEB-INF/templates/admin");
-		List userList = this.userService.list(hql, this.page.getStart(), this.page.getPageSize(), new Object[0]);
+		List<User> userList = this.userService.list(hql, this.page.getStart(), this.page.getPageSize(), new Object[0]);
+		
+		if (userList != null && userList.size() > 0) {
+			for (User user: userList) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+				String newHql = "select sum(money) from Orders where shop.id = " + user.getId() + " and dateMonth = '" + sdf.format(new Date()) + "'";
+				List<Orders> ordersList = this.ordersService.list(newHql);
+				user.setTradeAmtMonth(ordersList.get(0).getMoney());
+			}
+		}
 		Map root = new HashMap();
 		root.put("userList", userList);
 		root.put("page", this.page);

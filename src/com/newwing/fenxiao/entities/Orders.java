@@ -41,6 +41,8 @@ public class Orders extends BaseBean implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date payDate;
+	
+	private String dateMonth;// 交易日所处月份
 
 	public Double getMoney() {
 		return this.money;
@@ -128,6 +130,14 @@ public class Orders extends BaseBean implements Serializable {
 
 	public void setShop(User shop) {
 		this.shop = shop;
+	}
+
+	public String getDateMonth() {
+		return dateMonth;
+	}
+
+	public void setDateMonth(String dateMonth) {
+		this.dateMonth = dateMonth;
 	}
 	
 }

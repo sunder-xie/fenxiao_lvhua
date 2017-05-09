@@ -251,6 +251,9 @@ public class WeixinAction extends BaseAction {
 				orders.setSummary("西安同步的订单");
 				orders.setUser(user);
 				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+				orders.setDateMonth(sdf.format(new Date()));
+				
 				Orders orderTemp = this.ordersService.findByNo(ORDER_NO);
 				if (orderTemp != null) {
 					throw new Exception("订单已经存在，请勿重新同步！");

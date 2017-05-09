@@ -206,6 +206,8 @@ public class User extends BaseBean implements Serializable {
 			typeName = "白金商户";
 		} else if ("4".equals(type)) {
 			typeName = "铂金商户";
+		} else if ("9".equals(type)) {
+			typeName = "总商户";
 		}
 		return typeName;
 	}

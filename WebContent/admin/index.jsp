@@ -157,10 +157,10 @@ $(function(){
             <ul class="nav navbar-nav navbar-right">
                 <li class="datetime"><div><span id="bjui-date"></span><br><i class="fa fa-clock-o"></i> <span id="bjui-clock"></span></div></li>
                 <li><a href="javascript:void(0)">
-					    ${loginAdmin.name}
+					    ${loginAdmin.name}【${loginUser.typeName}】
 					</a></li>
-				<li><a href="withdrawAdd" data-toggle="dialog" data-id=withdrawAdd_page" data-mask="true" data-width="400" data-height="260">余额 ：${loginUser.balance} 元【<font color="red;">提现</font>】</a></li>
-				<li>不可提现余额 ：${loginUser.unBalance} 元</li>
+				<li><a href="withdrawAdd" data-toggle="dialog" data-id=withdrawAdd_page" data-mask="true" data-width="500" data-height="300">余额 ：${loginUser.balance} 元【<font color="red;">提现</font>】</a></li>
+				<li><a data-toggle="dialog" data-id=withdrawAdd_page" data-mask="true" data-width="500" data-height="300">不可提现余额 ：${loginUser.unBalance} 元</a></li>
                 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 	我的账户 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
